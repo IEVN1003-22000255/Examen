@@ -1,0 +1,119 @@
+<br><br><br><br>
+<div class="bg-gray-300 min-h-screen p-4">
+  <div class="max-w-6xl mx-auto space-y-4">
+
+    <!-- RECUADRO ROJO: Datos del Cliente y Selección de Pizza -->
+    <fieldset class="border-2 border-red-600 bg-slate-200 p-4 rounded shadow">
+      <legend class="font-bold px-2 text-black">Captura de Pedido</legend>
+      <form [formGroup]="formulario">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+          <div>
+            <label class="block text-sm font-semibold text-black">Nombre</label>
+            <input type="text" formControlName="nombre" class="border p-1 w-full rounded bg-white text-black" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-black">Dirección</label>
+            <input type="text" formControlName="direccion" class="border p-1 w-full rounded bg-white text-black" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-black">Teléfono</label>
+            <input type="text" formControlName="telefono" class="border p-1 w-full rounded bg-white text-black" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-black">Fecha</label>
+            <input type="date" formControlName="fecha" class="border p-1 w-full rounded bg-white text-black" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Tamaño Pizza -->
+          <div class="border p-2 rounded text-black">
+            <span class="block font-semibold mb-1">Tamaño Pizza</span>
+            <label class="block"><input type="radio" formControlName="tamano" value="Chica"> Chica $40</label>
+            <label class="block"><input type="radio" formControlName="tamano" value="Mediana"> Mediana $80</label>
+            <label class="block"><input type="radio" formControlName="tamano" value="Grande"> Grande $120</label>
+          </div>
+
+          <!-- Ingredientes -->
+          <div class="border p-2 rounded text-black" formGroupName="ingredientes">
+            <span class="block font-semibold mb-1">Ingredientes</span>
+            <label class="block"><input type="checkbox" formControlName="jamon"> Jamón $10</label>
+            <label class="block"><input type="checkbox" formControlName="pina"> Piña $10</label>
+            <label class="block"><input type="checkbox" formControlName="champinones"> Champiñones $10</label>
+          </div>
+
+          <!-- Num de Pizzas y Agregar -->
+          <div class="flex flex-col justify-between">
+            <div>
+              <label class="block text-sm font-semibold text-black">Num. de Pizzas</label>
+              <input type="number" formControlName="numPizzas" class="border p-1 w-full rounded bg-white text-black mb-2" />
+            </div>
+            <button type="button" class="bg-gray-400 border border-black px-4 py-2 font-semibold shadow hover:bg-gray-500 text-black" (click)="agregarPizza()">Agregar</button>
+          </div>
+        </div>
+      </form>
+    </fieldset>
+
+    <!-- CONTENEDOR INFERIOR (NEGRO Y AMARILLO) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <!-- RECUADRO NEGRO: Detalle de Pizzas con botón de quitar específico -->
+      <fieldset class="border-2 border-black bg-slate-200 p-4 rounded shadow flex flex-col justify-between">
+        <div>
+          <table class="w-full border-collapse border border-gray-500 bg-white text-black mb-4 text-sm">
+            <thead>
+              <tr class="bg-gray-300 border border-gray-500">
+                <th class="border border-gray-500 p-1">Tamaño</th>
+                <th class="border border-gray-500 p-1">Ingredientes</th>
+                <th class="border border-gray-500 p-1">Num.</th>
+                <th class="border border-gray-500 p-1">SubTotal</th>
+                <th class="border border-gray-500 p-1">Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pz of listaDetalle; let i = index" class="border border-gray-500">
+                <td class="border border-gray-500 p-1 text-center">{{ pz.tamano }}</td>
+                <td class="border border-gray-500 p-1">{{ pz.ingredientes.join(', ') }}</td>
+                <td class="border border-gray-500 p-1 text-center">{{ pz.numPizzas }}</td>
+                <td class="border border-gray-500 p-1 text-right">${{ pz.subtotal }}</td>
+                <td class="border border-gray-500 p-1 text-center">
+                  <button type="button" class="bg-red-500 text-white px-2 py-0.5 rounded text-xs hover:bg-red-600 font-semibold" (click)="quitarPizza(i)">Quitar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="flex justify-end">
+          <button type="button" class="bg-gray-400 border border-black px-6 py-1 font-semibold text-black" (click)="terminarPedido()">Terminar</button>
+        </div>
+      </fieldset>
+
+      <!-- RECUADRO AMARILLO: Ventas filtradas por fecha limpia -->
+      <fieldset class="border-2 border-yellow-500 bg-slate-200 p-4 rounded shadow flex flex-col justify-between">
+        <div>
+          <legend class="font-bold px-2 mb-2 text-black">Ventas del día</legend>
+          
+          <div class="mb-3">
+            <label class="block text-xs font-semibold mb-1 text-black">Filtrar por fecha (Ej. 2026-11 o 2026-11-08):</label>
+            <input type="text" [(ngModel)]="filtroFecha" placeholder="Escribe la fecha..." class="border p-1 w-full rounded bg-white text-black text-sm" />
+          </div>
+
+          <div class="bg-slate-300 p-4 rounded min-h-[120px] mb-4 space-y-2">
+            <div *ngFor="let venta of pedidosDelDia | pizzeriaFilter: filtroFecha" class="flex justify-between font-semibold text-lg text-black">
+              <span>{{ venta.nombre }} total</span>
+              <span>${{ venta.total }}</span>
+            </div>
+
+            <div class="border-t border-black pt-2 mt-2 font-bold text-xl flex justify-between text-black">
+              <span>Ventas totales:</span>
+              <span>${{ calcularTotalFiltrado(pedidosDelDia | pizzeriaFilter: filtroFecha) }}</span>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="bg-gray-400 border border-black py-2 font-semibold w-full text-black" (click)="cargarVentas()">Actualizar Ventas</button>
+      </fieldset>
+
+    </div>
+
+  </div>
+</div>

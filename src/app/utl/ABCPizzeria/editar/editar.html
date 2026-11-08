@@ -1,0 +1,31 @@
+<div class="bg-center min-h-screen bg-no-repeat bg-[url('https://images.unsplash.com/photo-1513104890138-7c749659a591')] bg-cover bg-dark bg-blend-multiply p-6">
+  <div class="max-w-4xl mx-auto">
+    <div class="flex justify-center mb-8">
+      <h1 class="bg-gray-100 text-gray-900 text-4xl font-bold italic px-4 py-1 border border-gray-300 rounded-lg">Editar Pedido</h1>
+    </div>
+
+    <form [formGroup]="formulario" *ngIf="pedidoActual">
+      <fieldset class="border-4 border-white/90 rounded-lg p-5 mb-6 text-white">
+        <legend class="px-2 text-2xl font-bold italic">Actualizar Datos</legend>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div>
+            <label class="block text-sm mb-1">Nombre</label>
+            <input type="text" formControlName="nombre" class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5" />
+          </div>
+          <div>
+            <label class="block text-sm mb-1">Dirección</label>
+            <input type="text" formControlName="direccion" class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5" />
+          </div>
+          <div>
+            <label class="block text-sm mb-1">Teléfono</label>
+            <input type="text" formControlName="telefono" class="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5" />
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <button type="button" class="text-gray-900 bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5" (click)="guardarCambios()">Guardar Cambios</button>
+          <button type="button" class="text-gray-900 bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5" (click)="cancelar()">Cancelar</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
